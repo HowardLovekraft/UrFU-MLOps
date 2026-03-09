@@ -1,5 +1,7 @@
 # Python
 __pycache__/
+.venv/
+uv.lock
 
 # LaTeX
 *.aux
@@ -7,3 +9,6 @@ __pycache__/
 *.out
 *.synctex.gz
 *.toc
+
+# Логи DAG
+Lab_2/logs

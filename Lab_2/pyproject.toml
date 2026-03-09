@@ -1,0 +1,11 @@
+[project]
+name = "cars"
+version = "0.1.0"
+description = ""
+readme = "readme.md"
+requires-python = ">=3.13"
+dependencies = [
+    "apache-airflow>=3.1.7",
+    "pandas>=3.0.1",
+    "scikit-learn>=1.8.0",
+]

@@ -1,0 +1,53 @@
+\include{preamble-article}
+
+\begin{document}
+	\input{title-page}
+	
+	\tableofcontents
+	\newpage
+	
+\section{Запущенный сервис}
+	\subsection{Сборка контейнеров}
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=\linewidth]{screenshot002}
+			\label{fig:screenshot002}
+		\end{figure}
+		
+	
+	\subsection{Работа контейнеров}
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=\linewidth]{screenshot001}
+			\label{fig:screenshot001}
+		\end{figure}
+				  
+	\newpage
+	\subsection{Работа API}
+		  \begin{figure}[h]
+		  	\centering
+			  	\includegraphics[width=\linewidth]{screenshot004}
+		  	\label{fig:screenshot004}
+		  \end{figure}
+
+	\section{Работа DAG}
+	\subsection{Работа пайплайна}
+		\begin{figure}[h!]
+			\centering
+			\includegraphics[width=0.9\linewidth]{screenshot003}
+			\label{fig:screenshot003}
+		\end{figure}
+		
+	\subsection{Оператор clean\_cars\_data}
+		В ходе лабораторной работы был добавлен оператор \texttt{clean\_cars\_data}.
+		
+		Код модифицированного пайплайна доступен в репозитории \href{https://github.com/HowardLovekraft/UrFU-MLOps}{GitHub}.
+		
+		Оператор выполняет все требуемые действия:
+		\begin{enumerate}
+			\item Очистка объектов с пропусками
+			\item Очистка дубликатов
+			\item Преобразование категориальных признаков в числовые
+		\end{enumerate}
+	
+\end{document}
