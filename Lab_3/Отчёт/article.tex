@@ -1,0 +1,114 @@
+\include{preamble-article}
+
+\begin{document}
+	\input{title-page}
+	
+	\tableofcontents
+	\newpage
+	
+\section{MLflow}
+	Код лабораторной работы доступен в репозитории \href{}{GitHub}
+
+\subsection{Датасет}
+	В качестве датасета был взят датасет о персонажа из вселенной \href{https://awoiaf.westeros.org/index.php/Main_Page}{Игры Престолов}.
+	
+	Так как целью лабораторной работы является работа с MLflow, процесс предобработки датасета пропущен.
+
+\subsection{Список моделей}
+	В процессе лабораторной работы будем решать задачу бинарной классификации - статус персонажа (жив/мертв).
+
+	Для обучения выберем следующие модели:
+	\begin{enumerate}
+		\item Наивный байесовский классификатор
+		\item Логистическая регрессия
+		\item Рандомный лес
+		\item Метод опорных векторов
+		\item Многослойный перцептрон
+	\end{enumerate}
+	
+	Также модели, поддерживающие гиперпараметры, будут отбираться среди 2-4 набор подготовленных гиперпараметров.
+		
+\subsection{Метрики моделей}
+	После нескольких "запусков" в рамках одного эксперимента получены следующие метрики:
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\linewidth]{screenshot001}
+		\caption{Запуски моделей}
+		\label{fig:screenshot001}
+	\end{figure}
+	
+	\newpage
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\linewidth]{accuracy}
+		\caption{Accuracy}
+		\label{fig:accuracy}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=\linewidth]{recall}
+		\caption{Recall}
+		\label{fig:recall}
+	\end{figure}
+	
+	\newpage
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\linewidth]{precision}
+		\caption{Precision}
+		\label{fig:precision}
+	\end{figure}
+	
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=\linewidth]{f1}
+		\caption{F1}
+		\label{fig:f1}
+	\end{figure}
+	
+	\newpage
+	\begin{figure}[h!]
+		\centering
+		\includegraphics[width=\linewidth]{roc_auc}
+		\caption{ROC-AUC}
+		\label{fig:roc_auc}
+	\end{figure}
+	
+\subsection{Выбор лучшей модели}
+	В качестве главной метрики выберем \texttt{ROC-AUC} - метрику для бинарной классификации.
+	
+	Она показывает долю площади под кривой ROC. 
+	
+	Кривая ROC отображается на двумерной плоскости, ось X - значение False Positive Rate, ось Y - значение True Positive Rate.
+	
+	Она показывает зависимость доли истинно положительных ответов (чувствительности) от доли ложно положительных ответов (ошибки I рода)
+	
+	Значение метрики находится на отрезке \texttt{[0;1]}. Значение метрики в 0.5 описывает случайное предсказание класса; чем ближе значение метрики к единице, тем лучше модель.
+	
+	По метрике ROC-AUC лучшей моделью является случайный лес с числом деревьев 20. 
+	
+	Метрики лучшей модели:
+	\begin{figure}[h]
+		\centering
+		\label{fig:screenshot002}
+		\includegraphics[width=0.7\linewidth]{screenshot002}
+	\end{figure}
+
+\newpage
+\subsection{Деплой модели}
+	Разворачивание модели с помощью \texttt{mlflow models serve}:
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=\linewidth]{screenshot003}
+		\label{fig:screenshot003}
+	\end{figure}
+	
+	\begin{figure}[h]
+		\centering
+		\includegraphics[width=0.9\linewidth]{screenshot004}
+		\label{fig:screenshot004}
+	\end{figure}
+
+\end{document}

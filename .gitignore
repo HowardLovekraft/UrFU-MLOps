@@ -1,7 +1,14 @@
 # Python
 __pycache__/
 .venv/
+.jupyter/
+.ipynb_checkpoints/
 uv.lock
+
+# MLflow
+F/
+mlruns/
+mlflow.db
 
 # LaTeX
 *.aux
