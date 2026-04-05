@@ -18,7 +18,7 @@ def scale_frame(frame):
     X,y = df.drop(columns = [target]), df[target]
 
     with open('x_train', "w") as f:
-        f.write(X)
+        f.write(str(X))
 
     scaler = StandardScaler()
     power_trans = PowerTransformer()
