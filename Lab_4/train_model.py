@@ -16,6 +16,10 @@ def scale_frame(frame):
     target = "Amount"
     df = frame.copy()
     X,y = df.drop(columns = [target]), df[target]
+
+    with open('x_train', "w") as f:
+        f.write(x_train)
+
     scaler = StandardScaler()
     power_trans = PowerTransformer()
     X_scale = scaler.fit_transform(X.values)
