@@ -72,14 +72,12 @@ def train():
  
         predictions = best.predict(X_train)
         signature = infer_signature(X_train, predictions)
-        mlflow.sklearn.log_model(best, "model", signature=signature)
+        model_info = mlflow.sklearn.log_model(best, "model", signature=signature)
         with open("lr_sales.pkl", "wb") as file:
             joblib.dump(lr, file)
-            
-        dfruns = mlflow.search_runs()
-        path2model = dfruns.sort_values("metrics.r2", ascending=False) \
-            .iloc[0]['artifact_uri'].replace("file://","") + '/model'
-        print(path2model)
+        
+    model_uri = model_info.model_uri
+    print(model_uri)
         
 
 if __name__ == '__main__':

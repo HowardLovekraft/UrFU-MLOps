@@ -19,3 +19,8 @@ mlflow.db
 
 # Логи DAG
 Lab_2/logs
+
+# Lab 4
+Lab_4/mlruns/
+Lab_4/*.csv
+Lab_4/*.pkl
