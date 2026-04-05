@@ -36,6 +36,8 @@ def train():
     X_train, X_val, y_train, y_val = train_test_split(X, Y,
                                                     test_size=0.3,
                                                     random_state=42)
+    
+    X_val.to_csv("./df_signature.csv", index=False)
  
  
     params = {'alpha': [0.0001, 0.001, 0.01, 0.05, 0.1 ],
