@@ -37,8 +37,8 @@ def train():
                                                     test_size=0.3,
                                                     random_state=42)
 
-    with open('./signature.csv') as f:
-        f.write(X_train)
+    with open('./signature.csv', "w") as f:
+        f.write(str(X_train))
     
     params = {'alpha': [0.0001, 0.001, 0.01, 0.05, 0.1 ],
             'l1_ratio': [0.001, 0.05, 0.01, 0.2],
