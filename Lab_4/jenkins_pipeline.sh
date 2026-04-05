@@ -28,9 +28,7 @@ mlflow models serve -m $path_model -p 5003 --no-conda & #запуск mlflow с�
 #------------------------
 
 #4. healthy (status service)
-curl http://127.0.0.1:5001/invocations \
-  -H "Content-Type: application/json" \
-  -d '{"male": 1.0, "book1": 0.0, "book4": 1.0, "popularity": 0.0167224080267558, "boolDeadRelations": 0.0, "age_value": 0.0, "age_no_data": 1.0, "culture_grouped_Old Nations": 0.0, "title_grouped_Prince": 0.0, "title_grouped_Princess": 0.0, "house_grouped_House Targaryen": 0.0, "house_grouped_Night'\''s Watch": 0.0, "IsDataAboutCloseRelative": 1.0}'
+curl http://127.0.0.1:5003/invocations -H "Content-Type: application/json" -d '{"inputs": [[0.98544899, 0.32362852, 0.97384268, 0.29808986, 0.03494213, 0]]}'
 
 
 #Pipeline - для объедения задач в последовательный конвеер
