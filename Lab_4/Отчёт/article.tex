@@ -1,0 +1,121 @@
+\include{preamble-article}
+
+\begin{document}
+	\input{title-page}
+	
+	\tableofcontents
+	\newpage
+	
+	\section{Пайплайн Jenkins}
+		Код для данной лабораторной работы был основан на коде сбора, обработки датасета и обучения модели из лабораторной работы №1.
+		
+		Исходный код обучения модели, а также Jenkins-пайплайна доступен в \href{https://github.com/HowardLovekraft/UrFU-MLOps/tree/master/Lab_4}{репозитории}.
+		
+		Пайплайн состоит из 4 задач:
+		\begin{enumerate}
+			\item Download
+			\item Train model
+			\item Deploy
+			\item Healthcheck
+		\end{enumerate}
+	
+	\subsection{Конфигурация пайплайна}
+		\begin{minted}[gobble=3, tabsize=4]{shell}
+			pipeline {
+			    agent any
+				
+			    stages {
+				   stage('Download') {
+				       steps {
+				           build job: 'Download'
+			           }
+			       }
+					
+					stage ('Train') {
+						steps {
+							build job: 'Train model'
+						}
+					}
+					
+					stage ('Deploy') {
+						steps {
+							build job: 'Deploy'
+						}
+					}
+					
+					stage ('Status') {
+						steps {
+							build job: 'Healthcheck'
+						}
+					}
+				}
+			}
+		\end{minted}
+	 
+	 \newpage
+	 \subsection{Работа пайплайна}
+		\begin{figure}[h]
+			\centering
+			\label{fig:screenshot001}
+			\includegraphics[width=0.8\linewidth]{Attachments/screenshot001}
+		\end{figure}	s
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.8\linewidth]{Attachments/screenshot009}
+			\label{fig:screenshot009}
+		\end{figure}
+		
+	\subsection{Download}
+	\subsubsection{Управление исходным кодом}
+	 	\begin{figure}[h]
+	 		\centering
+	 		\includegraphics[width=0.7\linewidth]{Attachments/screenshot002}
+	 		\label{fig:screenshot002}
+	 	\end{figure}
+	 
+	 \newpage
+	 \subsubsection{Триггеры}
+	 	\begin{figure}[h]
+	 		\centering
+	 		\includegraphics[width=0.7\linewidth]{Attachments/screenshot003}
+	 		\label{fig:screenshot003}
+	 	\end{figure}
+	 	
+	 \subsubsection{Сборка}
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.7\linewidth]{Attachments/screenshot004}
+			\label{fig:screenshot004}
+		\end{figure}
+		
+		\subsection{Train model}
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.7\linewidth]{Attachments/screenshot005}
+			\label{fig:screenshot005}
+		\end{figure}
+	
+		\subsection{Deploy}
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.7\linewidth]{Attachments/screenshot006}
+			\label{fig:screenshot006}
+		\end{figure}
+			
+	\newpage
+	\subsection{Healthcheck}
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.7\linewidth]{Attachments/screenshot011}
+			\label{fig:screenshot011}
+		\end{figure}
+		
+		\begin{figure}[h]
+			\centering
+			\label{fig:screenshot010}
+			\includegraphics[width=0.7\linewidth]{Attachments/screenshot010}
+		\end{figure}
+		
+		
+\end{document}

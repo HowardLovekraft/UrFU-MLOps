@@ -1,0 +1,31 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+pipeline\PYG{+w}{ }\PYG{o}{\PYGZob{}}
+\PYG{+w}{    }agent\PYG{+w}{ }any
+\PYG{+w}{	}
+\PYG{+w}{    }stages\PYG{+w}{ }\PYG{o}{\PYGZob{}}
+\PYG{+w}{	   }stage\PYG{o}{(}\PYG{l+s+s1}{\PYGZsq{}Download\PYGZsq{}}\PYG{o}{)}\PYG{+w}{ }\PYG{o}{\PYGZob{}}
+\PYG{+w}{	       }steps\PYG{+w}{ }\PYG{o}{\PYGZob{}}
+\PYG{+w}{	           }build\PYG{+w}{ }job:\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}Download\PYGZsq{}}
+\PYG{+w}{           }\PYG{o}{\PYGZcb{}}
+\PYG{+w}{       }\PYG{o}{\PYGZcb{}}
+\PYG{+w}{		}
+\PYG{+w}{		}stage\PYG{+w}{ }\PYG{o}{(}\PYG{l+s+s1}{\PYGZsq{}Train\PYGZsq{}}\PYG{o}{)}\PYG{+w}{ }\PYG{o}{\PYGZob{}}
+\PYG{+w}{			}steps\PYG{+w}{ }\PYG{o}{\PYGZob{}}
+\PYG{+w}{				}build\PYG{+w}{ }job:\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}Train model\PYGZsq{}}
+\PYG{+w}{			}\PYG{o}{\PYGZcb{}}
+\PYG{+w}{		}\PYG{o}{\PYGZcb{}}
+\PYG{+w}{		}
+\PYG{+w}{		}stage\PYG{+w}{ }\PYG{o}{(}\PYG{l+s+s1}{\PYGZsq{}Deploy\PYGZsq{}}\PYG{o}{)}\PYG{+w}{ }\PYG{o}{\PYGZob{}}
+\PYG{+w}{			}steps\PYG{+w}{ }\PYG{o}{\PYGZob{}}
+\PYG{+w}{				}build\PYG{+w}{ }job:\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}Deploy\PYGZsq{}}
+\PYG{+w}{			}\PYG{o}{\PYGZcb{}}
+\PYG{+w}{		}\PYG{o}{\PYGZcb{}}
+\PYG{+w}{		}
+\PYG{+w}{		}stage\PYG{+w}{ }\PYG{o}{(}\PYG{l+s+s1}{\PYGZsq{}Status\PYGZsq{}}\PYG{o}{)}\PYG{+w}{ }\PYG{o}{\PYGZob{}}
+\PYG{+w}{			}steps\PYG{+w}{ }\PYG{o}{\PYGZob{}}
+\PYG{+w}{				}build\PYG{+w}{ }job:\PYG{+w}{ }\PYG{l+s+s1}{\PYGZsq{}Healthcheck\PYGZsq{}}
+\PYG{+w}{			}\PYG{o}{\PYGZcb{}}
+\PYG{+w}{		}\PYG{o}{\PYGZcb{}}
+\PYG{+w}{	}\PYG{o}{\PYGZcb{}}
+\PYG{o}{\PYGZcb{}}
+\end{MintedVerbatim}
