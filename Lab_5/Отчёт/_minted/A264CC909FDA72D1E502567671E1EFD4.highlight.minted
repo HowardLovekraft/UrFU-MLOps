@@ -1,0 +1,86 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{typing}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{Any}
+
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{mlflow}
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{mlflow.models}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{infer\PYGZus{}signature}
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{numpy}\PYG{+w}{ }\PYG{k}{as}\PYG{+w}{ }\PYG{n+nn}{np}
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{pandas}\PYG{+w}{ }\PYG{k}{as}\PYG{+w}{ }\PYG{n+nn}{pd}
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{pickle}
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{sklearn.preprocessing}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{StandardScaler}\PYG{p}{,} \PYG{n}{PowerTransformer}
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{sklearn.linear\PYGZus{}model}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{SGDRegressor}
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{sklearn.model\PYGZus{}selection}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{GridSearchCV}
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{sklearn.metrics}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{,} \PYG{n}{mean\PYGZus{}squared\PYGZus{}error}\PYG{p}{,} \PYG{n}{r2\PYGZus{}score}
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{sklearn.pipeline}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{Pipeline}
+
+
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{eval\PYGZus{}metrics}\PYG{p}{(}\PYG{n}{actual}\PYG{p}{,} \PYG{n}{pred}\PYG{p}{):}
+    \PYG{n}{rmse} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{sqrt}\PYG{p}{(}\PYG{n}{mean\PYGZus{}squared\PYGZus{}error}\PYG{p}{(}\PYG{n}{actual}\PYG{p}{,} \PYG{n}{pred}\PYG{p}{))}
+    \PYG{n}{mae} \PYG{o}{=} \PYG{n}{mean\PYGZus{}absolute\PYGZus{}error}\PYG{p}{(}\PYG{n}{actual}\PYG{p}{,} \PYG{n}{pred}\PYG{p}{)}
+    \PYG{n}{r2} \PYG{o}{=} \PYG{n}{r2\PYGZus{}score}\PYG{p}{(}\PYG{n}{actual}\PYG{p}{,} \PYG{n}{pred}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{rmse}\PYG{p}{,} \PYG{n}{mae}\PYG{p}{,} \PYG{n}{r2}
+
+
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{scale\PYGZus{}frame}\PYG{p}{(}\PYG{n}{frame}\PYG{p}{:} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{,} \PYG{n}{target}\PYG{p}{:} \PYG{n+nb}{str} \PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}Amount\PYGZdq{}}\PYG{p}{):}
+    \PYG{n}{df} \PYG{o}{=} \PYG{n}{frame}\PYG{o}{.}\PYG{n}{copy}\PYG{p}{()}
+    \PYG{n}{X}\PYG{p}{,} \PYG{n}{y} \PYG{o}{=} \PYG{n}{df}\PYG{o}{.}\PYG{n}{drop}\PYG{p}{(}\PYG{n}{columns} \PYG{o}{=} \PYG{p}{[}\PYG{n}{target}\PYG{p}{]),} \PYG{n}{df}\PYG{p}{[}\PYG{n}{target}\PYG{p}{]}
+
+    \PYG{k}{with} \PYG{n+nb}{open}\PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}x\PYGZus{}train\PYGZsq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}w\PYGZdq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{f}\PYG{p}{:}
+        \PYG{n}{f}\PYG{o}{.}\PYG{n}{write}\PYG{p}{(}\PYG{n+nb}{str}\PYG{p}{(}\PYG{n}{X}\PYG{o}{.}\PYG{n}{to\PYGZus{}numpy}\PYG{p}{()))}
+
+    \PYG{n}{scaler} \PYG{o}{=} \PYG{n}{StandardScaler}\PYG{p}{()}
+    \PYG{n}{power\PYGZus{}trans} \PYG{o}{=} \PYG{n}{PowerTransformer}\PYG{p}{()}
+    \PYG{n}{X\PYGZus{}scale} \PYG{o}{=} \PYG{n}{scaler}\PYG{o}{.}\PYG{n}{fit\PYGZus{}transform}\PYG{p}{(}\PYG{n}{X}\PYG{o}{.}\PYG{n}{values}\PYG{p}{)}
+    \PYG{n}{Y\PYGZus{}scale} \PYG{o}{=} \PYG{n}{power\PYGZus{}trans}\PYG{o}{.}\PYG{n}{fit\PYGZus{}transform}\PYG{p}{(}\PYG{n}{y}\PYG{o}{.}\PYG{n}{values}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,}\PYG{l+m+mi}{1}\PYG{p}{))}
+    \PYG{k}{return} \PYG{n}{X\PYGZus{}scale}\PYG{p}{,} \PYG{n}{Y\PYGZus{}scale}\PYG{p}{,} \PYG{n}{power\PYGZus{}trans}
+
+
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{train}\PYG{p}{(}\PYG{n}{cfg}\PYG{p}{:} \PYG{n+nb}{dict}\PYG{p}{[}\PYG{n+nb}{str}\PYG{p}{,} \PYG{n}{Any}\PYG{p}{],} \PYG{n}{target}\PYG{p}{:} \PYG{n+nb}{str} \PYG{o}{=} \PYG{l+s+s1}{\PYGZsq{}Amount\PYGZsq{}}\PYG{p}{):}
+    \PYG{n}{df\PYGZus{}train} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{read\PYGZus{}csv}\PYG{p}{(}\PYG{n}{cfg}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}data\PYGZus{}split\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}trainset\PYGZus{}path\PYGZsq{}}\PYG{p}{])}
+    \PYG{n}{df\PYGZus{}test} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{read\PYGZus{}csv}\PYG{p}{(}\PYG{n}{cfg}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}data\PYGZus{}split\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}testset\PYGZus{}path\PYGZsq{}}\PYG{p}{])}
+    \PYG{n+nb}{print}\PYG{p}{(}\PYG{n}{df\PYGZus{}train}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{)}
+
+    \PYG{n}{X\PYGZus{}train}\PYG{p}{,} \PYG{n}{y\PYGZus{}train} \PYG{o}{=} \PYG{n}{df\PYGZus{}train}\PYG{o}{.}\PYG{n}{drop}\PYG{p}{(}\PYG{n}{columns}\PYG{o}{=}\PYG{p}{[}\PYG{n}{target}\PYG{p}{])}\PYG{o}{.}\PYG{n}{values}\PYG{p}{,} \PYG{n}{df\PYGZus{}train}\PYG{p}{[}\PYG{n}{target}\PYG{p}{]}\PYG{o}{.}\PYG{n}{values}
+    \PYG{n}{X\PYGZus{}val}\PYG{p}{,} \PYG{n}{y\PYGZus{}val} \PYG{o}{=} \PYG{n}{df\PYGZus{}test}\PYG{o}{.}\PYG{n}{drop}\PYG{p}{(}\PYG{n}{columns}\PYG{o}{=}\PYG{p}{[}\PYG{n}{target}\PYG{p}{])}\PYG{o}{.}\PYG{n}{values}\PYG{p}{,} \PYG{n}{df\PYGZus{}test}\PYG{p}{[}\PYG{n}{target}\PYG{p}{]}\PYG{o}{.}\PYG{n}{values}
+    \PYG{n}{power\PYGZus{}trans} \PYG{o}{=} \PYG{n}{PowerTransformer}\PYG{p}{()}
+    \PYG{n}{y\PYGZus{}train} \PYG{o}{=} \PYG{n}{power\PYGZus{}trans}\PYG{o}{.}\PYG{n}{fit\PYGZus{}transform}\PYG{p}{(}\PYG{n}{y\PYGZus{}train}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{))}
+    \PYG{n}{y\PYGZus{}val} \PYG{o}{=} \PYG{n}{power\PYGZus{}trans}\PYG{o}{.}\PYG{n}{transform}\PYG{p}{(}\PYG{n}{y\PYGZus{}val}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{))}
+
+    \PYG{n}{mlflow}\PYG{o}{.}\PYG{n}{set\PYGZus{}experiment}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Linear model Chocolate sales\PYGZdq{}}\PYG{p}{)}
+    \PYG{k}{with} \PYG{n}{mlflow}\PYG{o}{.}\PYG{n}{start\PYGZus{}run}\PYG{p}{():}
+        \PYG{n}{lr\PYGZus{}pipe} \PYG{o}{=} \PYG{n}{Pipeline}\PYG{p}{([}
+            \PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}scaler\PYGZsq{}}\PYG{p}{,} \PYG{n}{StandardScaler}\PYG{p}{()),}
+            \PYG{p}{(}\PYG{l+s+s1}{\PYGZsq{}model\PYGZsq{}}\PYG{p}{,} \PYG{n}{SGDRegressor}\PYG{p}{(}\PYG{n}{random\PYGZus{}state}\PYG{o}{=}\PYG{l+m+mi}{42}\PYG{p}{))}
+        \PYG{p}{])}
+        \PYG{n}{params} \PYG{o}{=} \PYG{p}{\PYGZob{}}
+            \PYG{l+s+s1}{\PYGZsq{}model\PYGZus{}\PYGZus{}alpha\PYGZsq{}}\PYG{p}{:} \PYG{n}{cfg}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}train\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}alpha\PYGZsq{}}\PYG{p}{],}
+            \PYG{l+s+s1}{\PYGZsq{}model\PYGZus{}\PYGZus{}fit\PYGZus{}intercept\PYGZsq{}}\PYG{p}{:} \PYG{p}{[}\PYG{k+kc}{False}\PYG{p}{,} \PYG{k+kc}{True}\PYG{p}{],}
+        \PYG{p}{\PYGZcb{}}
+
+        \PYG{n}{clf} \PYG{o}{=} \PYG{n}{GridSearchCV}\PYG{p}{(}\PYG{n}{lr\PYGZus{}pipe}\PYG{p}{,} \PYG{n}{params}\PYG{p}{,} \PYG{n}{cv} \PYG{o}{=} \PYG{n}{cfg}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}train\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}cv\PYGZsq{}}\PYG{p}{],} \PYG{n}{n\PYGZus{}jobs}\PYG{o}{=}\PYG{l+m+mi}{4}\PYG{p}{)}
+        \PYG{n}{clf}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{X\PYGZus{}train}\PYG{p}{,} \PYG{n}{y\PYGZus{}train}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{))}
+        \PYG{n}{best} \PYG{o}{=} \PYG{n}{clf}\PYG{o}{.}\PYG{n}{best\PYGZus{}estimator\PYGZus{}}
+        \PYG{n}{best\PYGZus{}lr} \PYG{o}{=} \PYG{n}{best}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}model\PYGZsq{}}\PYG{p}{]}
+
+        \PYG{n}{y\PYGZus{}pred} \PYG{o}{=} \PYG{n}{best}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{X\PYGZus{}val}\PYG{p}{)}
+        \PYG{n}{y\PYGZus{}price\PYGZus{}pred} \PYG{o}{=} \PYG{n}{power\PYGZus{}trans}\PYG{o}{.}\PYG{n}{inverse\PYGZus{}transform}\PYG{p}{(}\PYG{n}{y\PYGZus{}pred}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{))}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s1}{\PYGZsq{}y\PYGZus{}price\PYGZus{}pred: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{y\PYGZus{}price\PYGZus{}pred}\PYG{p}{[:}\PYG{l+m+mi}{5}\PYG{p}{]}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+        \PYG{n+nb}{print}\PYG{p}{(}\PYG{l+s+sa}{f}\PYG{l+s+s1}{\PYGZsq{}y\PYGZus{}val: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{y\PYGZus{}val}\PYG{p}{[:}\PYG{l+m+mi}{5}\PYG{p}{]}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s1}{\PYGZsq{}}\PYG{p}{)}
+
+        \PYG{p}{(}\PYG{n}{rmse}\PYG{p}{,} \PYG{n}{mae}\PYG{p}{,} \PYG{n}{r2}\PYG{p}{)} \PYG{o}{=} \PYG{n}{eval\PYGZus{}metrics}\PYG{p}{(}\PYG{n}{power\PYGZus{}trans}\PYG{o}{.}\PYG{n}{inverse\PYGZus{}transform}\PYG{p}{(}\PYG{n}{y\PYGZus{}val}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{)),} \PYG{n}{y\PYGZus{}price\PYGZus{}pred}\PYG{o}{.}\PYG{n}{reshape}\PYG{p}{(}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{1}\PYG{p}{))}
+        \PYG{n}{mlflow}\PYG{o}{.}\PYG{n}{log\PYGZus{}metric}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}rmse\PYGZdq{}}\PYG{p}{,} \PYG{n}{rmse}\PYG{p}{)}
+        \PYG{n}{mlflow}\PYG{o}{.}\PYG{n}{log\PYGZus{}metric}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}r2\PYGZdq{}}\PYG{p}{,} \PYG{n}{r2}\PYG{p}{)}
+        \PYG{n}{mlflow}\PYG{o}{.}\PYG{n}{log\PYGZus{}metric}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}mae\PYGZdq{}}\PYG{p}{,} \PYG{n}{mae}\PYG{p}{)}
+        \PYG{n+nb}{print}\PYG{p}{(}
+            \PYG{p}{[}\PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}R2: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{r2}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}RMSE: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{rmse}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+sa}{f}\PYG{l+s+s2}{\PYGZdq{}MAE: }\PYG{l+s+si}{\PYGZob{}}\PYG{n}{mae}\PYG{l+s+si}{\PYGZcb{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{],} \PYG{n}{sep}\PYG{o}{=}\PYG{l+s+s1}{\PYGZsq{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s1}{\PYGZsq{}}
+        \PYG{p}{)}
+
+        \PYG{n}{preds} \PYG{o}{=} \PYG{n}{best}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{X\PYGZus{}train}\PYG{p}{)}
+        \PYG{n}{signature} \PYG{o}{=} \PYG{n}{infer\PYGZus{}signature}\PYG{p}{(}\PYG{n}{X\PYGZus{}train}\PYG{p}{,} \PYG{n}{preds}\PYG{p}{)}
+        \PYG{n}{mlflow}\PYG{o}{.}\PYG{n}{sklearn}\PYG{o}{.}\PYG{n}{log\PYGZus{}model}\PYG{p}{(}\PYG{n}{best}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}model\PYGZdq{}}\PYG{p}{,} \PYG{n}{signature}\PYG{o}{=}\PYG{n}{signature}\PYG{p}{)}
+
+        \PYG{k}{with} \PYG{n+nb}{open}\PYG{p}{(}\PYG{n}{cfg}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}train\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}model\PYGZus{}path\PYGZsq{}}\PYG{p}{],} \PYG{l+s+s2}{\PYGZdq{}wb\PYGZdq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{file}\PYG{p}{:}
+            \PYG{n}{pickle}\PYG{o}{.}\PYG{n}{dump}\PYG{p}{(}\PYG{n}{best}\PYG{p}{,} \PYG{n}{file}\PYG{p}{)}
+
+        \PYG{k}{with} \PYG{n+nb}{open}\PYG{p}{(}\PYG{n}{cfg}\PYG{p}{[}\PYG{l+s+s1}{\PYGZsq{}train\PYGZsq{}}\PYG{p}{][}\PYG{l+s+s1}{\PYGZsq{}power\PYGZus{}path\PYGZsq{}}\PYG{p}{],} \PYG{l+s+s2}{\PYGZdq{}wb\PYGZdq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{file}\PYG{p}{:}
+            \PYG{n}{pickle}\PYG{o}{.}\PYG{n}{dump}\PYG{p}{(}\PYG{n}{power\PYGZus{}trans}\PYG{p}{,} \PYG{n}{file}\PYG{p}{)}
+\end{MintedVerbatim}

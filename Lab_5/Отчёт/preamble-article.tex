@@ -1,0 +1,73 @@
+\documentclass[12pt]{article}
+
+\usepackage{mmap}  % Включает русский текст при копировании
+\usepackage[unicode]{hyperref}
+
+\usepackage{amsmath, amsthm, amssymb, amsfonts}
+\usepackage{mathtext, mathtools}
+\usepackage{xcolor, listings}
+\usepackage{minted}  % Современная альтернатива listings 
+\usepackage{algorithm2e}
+\usepackage{pgfplots}
+\usepackage{pifont}
+
+\usepackage[T1, T2A]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[english, russian]{babel}
+
+\usepackage{indentfirst}
+\usepackage{paracol}  % Позволяет писать в несколько колонок
+\usepackage{mdframed}  % Добавляет рамки для текста
+
+\usepackage{tcolorbox}  % Добавляет красивые цветные рамки для текста
+\usepackage{graphicx}
+\usepackage{geometry}
+\geometry{a4paper,
+	total={170mm,257mm},left=2cm,right=2cm,
+	top=2cm,bottom=2cm}
+
+\usepackage{titleps}
+\newpagestyle{main}{
+	\setheadrule{0.4pt}
+	\sethead{лево}{центр}{право}
+	\setfootrule{0.4pt}
+	\setfoot{left}{\thepage}{право}
+}
+
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\sigmoid}{sigmoid}
+\DeclareMathOperator*{\argmax}{argmax}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Теорема}[section]
+\newtheorem{corollary}{Следствие}[theorem]
+\newtheorem*{definition}{def}
+
+\newenvironment{eq_array}{\begin{equation*}\begin{array}{l}}{\end{array}\end{equation*}}
+
+\lstset{
+	extendedchars=false,
+	language=Python,                 % выбор языка для подсветки (здесь это Python)
+	basicstyle=\small\sffamily, % размер и начертание шрифта для подсветки кода
+	numbers=left,               % где поставить нумерацию строк (слева\справа)
+	numberstyle=\tiny,           % размер шрифта для номеров строк
+	stepnumber=1,                   % размер шага между двумя номерами строк
+	numbersep=5pt,                % как далеко отстоят номера строк от подсвечиваемого кода
+	backgroundcolor=\color{white}, % цвет фона подсветки - используем \usepackage{color}
+	showspaces=false,            % показывать или нет пробелы специальными отступами
+	showstringspaces=false,      % показывать или нет пробелы в строках
+	showtabs=false,             % показывать или нет табуляцию в строках
+	frame=single,              % рисовать рамку вокруг кода
+	tabsize=2,                 % размер табуляции по умолчанию равен 2 пробелам
+	captionpos=t,              % позиция заголовка вверху [t] или внизу [b] 
+	breaklines=true,           % автоматически переносить строки (да\нет)
+	breakatwhitespace=false, % переносить строки только если есть пробел
+	escapeinside={\%*}{*)},   % если нужно добавить комментарии в коде,
+	keepspaces=true
+}
+
+\setminted{
+	breaklines=true,
+	fontsize=\small,
+	frame=single
+}
