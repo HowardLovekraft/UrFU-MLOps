@@ -1,0 +1,16 @@
+[project]
+name = "lab-6"
+version = "0.1.0"
+description = ""
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.136.1",
+    "kagglehub>=1.0.1",
+    "loguru>=0.7.3",
+    "numpy>=2.4.4",
+    "pandas>=3.0.3",
+    "pytest>=9.0.3",
+    "scikit-learn>=1.8.0",
+    "xgboost>=3.2.0",
+]
