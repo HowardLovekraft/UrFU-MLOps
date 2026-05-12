@@ -2,7 +2,7 @@ FROM python:3.13
 
 WORKDIR /usr/src/app
 
-COPY . .
+COPY src/ tests/ pyproject.toml ./
 RUN uv sync
 
-CMD ["uv", "app.py"]
+CMD ["uv", "src/app.py"]
