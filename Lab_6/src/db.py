@@ -5,7 +5,7 @@ from src.schemas import RecordSchema, PredictionSchema
 
 def create_table():
     with (
-        psycopg.connect("host=db dbname=perfs user=postgres password=1337") as conn,
+        psycopg.connect("host=db dbname=postgres user=postgres password=1337") as conn,
         conn.cursor() as cur
     ):
         cur.execute("""
@@ -30,7 +30,7 @@ def create_table():
 
 def get_record(record: RecordSchema):
     with (
-        psycopg.connect("host=db dbname=perfs user=postgres password=1337") as conn,
+        psycopg.connect("host=db dbname=postgres user=postgres password=1337") as conn,
         conn.cursor() as cur
     ):
         cur.execute("""
@@ -57,7 +57,7 @@ def get_record(record: RecordSchema):
 
 def add_record(record: RecordSchema, performance_index: int) -> None:
     with (
-        psycopg.connect("host=db dbname=perfs user=postgres password=1337") as conn,
+        psycopg.connect("host=db dbname=postgres user=postgres password=1337") as conn,
         conn.cursor() as cur
     ):
         cur.execute(

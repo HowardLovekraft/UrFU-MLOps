@@ -1,8 +1,12 @@
-FROM ghcr.io/astral-sh/uv:alpine3.23
+FROM ghcr.io/astral-sh/uv:debian-slim
 
-WORKDIR /usr/src/app
+WORKDIR /usr/src/Lab_6
 
-COPY src/ tests/ pyproject.toml ./
+COPY pyproject.toml ./
 RUN uv sync
+COPY . ./
 
-CMD ["uv", "run", "fastapi"]
+ENV PYTHONPATH=/usr/src/Lab_6
+EXPOSE 8000
+
+CMD ["uv", "run", "src/app.py"]
