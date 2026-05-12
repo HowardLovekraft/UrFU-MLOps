@@ -1,8 +1,8 @@
-FROM python:3.13
+FROM ghcr.io/astral-sh/uv:alpine3.23
 
 WORKDIR /usr/src/app
 
 COPY src/ tests/ pyproject.toml ./
 RUN uv sync
 
-CMD ["uv", "src/app.py"]
+CMD ["uv", "run", "fastapi"]

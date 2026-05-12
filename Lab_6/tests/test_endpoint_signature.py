@@ -1,20 +1,19 @@
-import requests
 from typing import Final
 
-from fastapi import FastAPI
 from fastapi.testclient import TestClient
-import pytest
+from httpx import Response
 
-from src.app import app
-
-
-ENDPOINT_URL: Final = 'http://'
+from src.schemas import RecordSchema, PredictionSchema
 
 
-@pytest.fixture(scope='session')
-def web_app() -> FastAPI:
-    return app
+ENDPOINT_URL: Final = '/predict'
 
 
-def test_request_signature(web_app: FastAPI):
-   requests.post(url=ENDPOINT_URL, data=VALID_REQUEST)
+def test_endpoint_signature(
+    client: TestClient,
+    valid_request: RecordSchema,
+    valid_response: PredictionSchema
+) -> None:
+    response: Response =  client.post(ENDPOINT_URL, json=valid_request.model_dump())
+    assert response.status_code == 200
+    assert response.json() == valid_response.model_dump()

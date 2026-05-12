@@ -1,6 +1,7 @@
+from array import array
 from enum import Enum
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class WeekDay(str, Enum):
@@ -36,12 +37,8 @@ class Grade(str, Enum):
 
 
 class RecordSchema(BaseModel):
-    day: WeekDay
     period: Period
     subject: Subject
-    grade: Grade
-    age: int
-    has_asthma: int
     co2_ppm: float
     pm25_ugm3: float
     temperature_c: float
@@ -51,8 +48,8 @@ class RecordSchema(BaseModel):
     error_rate: float
     heart_rate_bpm: int
     cognitive_impairment: float
-    air_quality: int
+    air_quality: int = Field(ge=0, le=2)
 
 
 class PredictionSchema(BaseModel):
-    performance_index: int
+    performance_index: int = Field(ge=0, le=2)

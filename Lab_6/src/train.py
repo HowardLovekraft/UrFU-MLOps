@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import joblib
 import kagglehub
 from loguru import logger
 import pandas as pd
@@ -11,6 +12,8 @@ from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
 from sklearn.preprocessing import StandardScaler
 from xgboost import XGBClassifier
 
+from paths import get_model_weights_path
+
 
 DATASET_NAME = "uniquetech/air-quality-and-student-performance-dataset"
 data_path = Path(kagglehub.dataset_download(DATASET_NAME))
@@ -19,7 +22,6 @@ data = pd.read_csv(data_path / 'student_learning_air_quality.csv')
 
 # Дропаем индекс из датасета
 data = data.drop(columns=['student_id'])
-cols_to_drop: set[str] = set()
 
 air_quality_mapping = {'Poor': 0, 'Moderate': 1, 'Good': 2}
 data['air_quality'] = data.air_quality_label.map(air_quality_mapping)
@@ -31,7 +33,7 @@ data.drop(columns=['performance_label'], inplace=True)
 
 
 X_train, X_test, y_train, y_test = train_test_split(
-    data.drop(columns=['target', 'quiz_score']),
+    data.drop(columns=['target', 'quiz_score', 'day', 'grade', 'age', 'has_asthma']),
     data.target,
     test_size=0.3, random_state=42
 )
@@ -42,7 +44,7 @@ param = {
 }
 
 cols_to_onehot = ['subject']
-cols_to_ordinal = ['day', 'period', 'grade']
+cols_to_ordinal = ['period']
 col_transformer = ColumnTransformer(
     [
         ('one-hot', OneHotEncoder(drop='first', sparse_output=False, handle_unknown='ignore'), cols_to_onehot),
@@ -59,5 +61,6 @@ pipeline = Pipeline([
 pipeline.fit(X_train, y_train)
 
 y_pred = pipeline.predict(X_test)
+joblib.dump(pipeline, get_model_weights_path())
 metrics = str(classification_report(y_test, y_pred))
 logger.info(metrics)

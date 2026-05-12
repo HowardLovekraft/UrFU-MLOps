@@ -2,4 +2,11 @@ services:
   web:
     build: .
     ports:
-      - "$f{APP_PORT}:4444"
+      - 8000:8000
+
+  db:
+    image: postgres:18
+    restart: always
+    shm_size: 128mb
+    environment:
+      POSTGRES_PASSWORD: 1337
