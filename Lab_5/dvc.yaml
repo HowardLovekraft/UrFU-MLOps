@@ -1,0 +1,27 @@
+stages:
+  prepare_dataset:
+    cmd: uv run src/stages/prepare_dataset.py
+    deps:
+    - src/stages/prepare_dataset.py
+    - src/config.yaml
+    outs:
+    - ./data/final.csv
+  data_split:
+    cmd: python src/stages/data_split.py
+    deps:
+    - src/stages/data_split.py
+    - src/config.yaml
+    - ./data/final.csv
+    outs:
+    - ./data/test_sales.csv
+    - ./data/train_sales.csv
+  train:
+    cmd: python src/stages/train.py
+    deps:
+    - src/config.yaml
+    - src/stages/train.py
+    - ./data/test_sales.csv
+    - ./data/train_sales.csv
+    outs:
+    - ./models/sales.joblib
+    - ./models/power.joblib

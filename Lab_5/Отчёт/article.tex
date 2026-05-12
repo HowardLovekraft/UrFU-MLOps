@@ -1,0 +1,35 @@
+\include{preamble-article}
+
+\begin{document}
+	\input{title-page}
+	
+	\tableofcontents
+	
+	\section{Пайплайн обучения}
+		% Шаблон не соответствует ГОСТу 7.32
+		% За шаблоном по ГОСТу 7.32 - сюда:
+		% https://github.com/latex-g7-32/latex-g7-32/releases/tag/5.0.0
+		Код лабораторной работы доступен в репозитории:
+		\begin{center}
+			\href{https://github.com/HowardLovekraft/UrFU-MLOps}{https://github.com/HowardLovekraft/UrFU-MLOps}
+		\end{center}
+		
+	\subsection{Очистка набора данных и добавление новых признаков}
+		Код подготовки датасета к работе с моделью:
+		\inputminted{python}{../src/stages/prepare_dataset.py}
+		
+	\subsection{Обучение модели}
+		Скрипт обучения модели:
+		\inputminted{python}{../src/model_scripts/train.py}
+		
+	\subsection{Оценка качества работы модели}
+		В ходе лабораторной работы акцент в действиях был на получение опыта работы с Data Version Control, а не достижение хороших значений метрик.
+		
+		Метрики после выполнения пайплайна выводятся в консоль:
+		
+		\begin{figure}[ht]
+			\centering
+			\includegraphics[width=\linewidth]{Attachments/screenshot001}
+			\label{fig:screenshot001}
+		\end{figure}
+\end{document}

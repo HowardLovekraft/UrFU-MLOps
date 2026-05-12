@@ -24,3 +24,6 @@ Lab_2/logs
 Lab_4/mlruns/
 Lab_4/*.csv
 Lab_4/*.pkl
+
+# Lab 5
+Lab_5/data/*.csv
