@@ -1,6 +1,6 @@
 import psycopg
 
-from src.schemas import RecordSchema, PredictionSchema
+from src.schemas import RecordSchema
 
 
 def create_table():

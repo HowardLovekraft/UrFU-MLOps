@@ -29,9 +29,48 @@ def valid_request() -> RecordSchema:
         air_quality=2
     )
 
+@pytest.fixture(scope='session')
+def valid_request_2() -> RecordSchema:
+    return RecordSchema(**{
+        'period': '3rd Period',
+        'subject': 'English',
+        'co2_ppm': 663.8,
+        'pm25_ugm3': 8.11,
+        'temperature_c': 21.9,
+        'humidity_pct': 46.0,
+        'reaction_time_ms': 216,
+        'focus_rating': 7.2,
+        'error_rate': 1.68,
+        'heart_rate_bpm': 75,
+        'cognitive_impairment': 0.0191,
+        'air_quality': 2
+    })
+
 
 @pytest.fixture(scope='session')
 def valid_response() -> PredictionSchema:
     return PredictionSchema(
         performance_index=1
     )
+
+
+@pytest.fixture(scope='session')
+def request_with_invalid_enum() -> dict[str, str|float|int]:
+    """
+    Невалидный запрос к модели.
+    В поле subject невалидное значение 'Informatics'
+    """
+    return {
+        'period': '3rd Period',
+        'subject': 'Informatics',
+        'co2_ppm': 663.4,
+        'pm25_ugm3': 8.07,
+        'temperature_c': 21.9,
+        'humidity_pct': 46.0,
+        'reaction_time_ms': 213,
+        'focus_rating': 7.2,
+        'error_rate': 1.68,
+        'heart_rate_bpm': 75,
+        'cognitive_impairment': 0.0191,
+        'air_quality': 2
+    }
