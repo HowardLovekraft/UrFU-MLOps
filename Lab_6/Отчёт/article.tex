@@ -2,9 +2,7 @@
 
 \begin{document}
 	\input{title-page}
-	
-	\tableofcontents
-	\newpage
+
 	
 	\section{Docker Compose}
 		% Шаблон не соответствует ГОСТу 7.32
@@ -12,12 +10,48 @@
 		% https://github.com/latex-g7-32/latex-g7-32/releases/tag/5.0.0
 		
 		Код лабораторной работы доступен в репозитории:
-		\href{https://github.com/HowardLovekraft/UrFU-MLOps}{https://github.com/HowardLovekraft/UrFU-MLOps}
 		
-		Код Dockerfile - образ c бэкендом на FastAPI:
+		\begin{center}
+			\href{https://github.com/HowardLovekraft/UrFU-MLOps}{https://github.com/HowardLovekraft/UrFU-MLOps}
+		\end{center}
+		
+		Код Dockerfile для сборки бэкенда:
 		\inputminted{Dockerfile}{../Dockerfile}
 		
+		Код compose.yaml - приложения из API модели и БД:
+		\inputminted{yaml}{../compose.yaml}
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=0.6\linewidth]{screenshot001}
+			\label{fig:screenshot001}
+		\end{figure}
+		
+		
 	\section{Автотесты}
+		Для программы написаны тесты на pytest. Всего 3 теста:
+		\begin{itemize}
+			\item Корректная работа эндпоинта
+			\item Проверка валидатора запроса к модели
+			\item Проверка базы данных
+		\end{itemize}
+		
+		Код тестов:
+		\inputminted{python}{../tests/test_endpoint.py}
+		
+		\begin{figure}[h]
+			\centering
+			\includegraphics[width=\linewidth]{screenshot002}
+			\label{fig:screenshot002}
+		\end{figure}
+		
 	
 	\section{PostgreSQL}
+		В приложении используется база данных Postgres для хранения запросов пользователей.
+		
+		Поддерживается 2 операции: добавление записи и получение значения таргета по записи.
+		
+		Код запросов к БД:
+		\inputminted{python}{../src/db.py}
+		
 \end{document}

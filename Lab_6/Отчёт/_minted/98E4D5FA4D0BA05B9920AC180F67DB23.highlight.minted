@@ -1,0 +1,14 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k}{FROM}\PYG{+w}{ }\PYG{l+s}{ghcr.io/astral\PYGZhy{}sh/uv:debian\PYGZhy{}slim}
+
+\PYG{k}{WORKDIR}\PYG{+w}{ }\PYG{l+s}{/usr/src/Lab\PYGZus{}6}
+
+\PYG{k}{COPY}\PYG{+w}{ }pyproject.toml\PYG{+w}{ }./
+\PYG{k}{RUN}\PYG{+w}{ }uv\PYG{+w}{ }sync
+\PYG{k}{COPY}\PYG{+w}{ }.\PYG{+w}{ }./
+
+\PYG{k}{ENV}\PYG{+w}{ }\PYG{n+nv}{PYTHONPATH}\PYG{o}{=}/usr/src/Lab\PYGZus{}6
+\PYG{k}{EXPOSE}\PYG{+w}{ }\PYG{l+s}{8000}
+
+\PYG{k}{CMD}\PYG{+w}{ }\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}uv\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}run\PYGZdq{}}\PYG{p}{,}\PYG{+w}{ }\PYG{l+s+s2}{\PYGZdq{}src/app.py\PYGZdq{}}\PYG{p}{]}
+\end{MintedVerbatim}

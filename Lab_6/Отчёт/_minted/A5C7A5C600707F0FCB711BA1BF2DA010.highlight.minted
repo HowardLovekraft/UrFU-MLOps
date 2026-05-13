@@ -1,0 +1,72 @@
+\begin{MintedVerbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{import}\PYG{+w}{ }\PYG{n+nn}{psycopg}
+
+\PYG{k+kn}{from}\PYG{+w}{ }\PYG{n+nn}{src.schemas}\PYG{+w}{ }\PYG{k+kn}{import} \PYG{n}{RecordSchema}
+
+
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{create\PYGZus{}table}\PYG{p}{():}
+    \PYG{k}{with} \PYG{p}{(}
+        \PYG{n}{psycopg}\PYG{o}{.}\PYG{n}{connect}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}host=db dbname=postgres user=postgres password=1337\PYGZdq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{conn}\PYG{p}{,}
+        \PYG{n}{conn}\PYG{o}{.}\PYG{n}{cursor}\PYG{p}{()} \PYG{k}{as} \PYG{n}{cur}
+    \PYG{p}{):}
+        \PYG{n}{cur}\PYG{o}{.}\PYG{n}{execute}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+s2}{            CREATE TABLE IF NOT EXISTS predictions (}
+\PYG{l+s+s2}{                id INTEGER GENERATED ALWAYS AS IDENTITY PRIMARY KEY,}
+\PYG{l+s+s2}{                period TEXT,}
+\PYG{l+s+s2}{                subject TEXT,}
+\PYG{l+s+s2}{                co2\PYGZus{}ppm DOUBLE PRECISION,}
+\PYG{l+s+s2}{                pm25\PYGZus{}ugm3 DOUBLE PRECISION,}
+\PYG{l+s+s2}{                temperature\PYGZus{}c DOUBLE PRECISION,}
+\PYG{l+s+s2}{                humidity\PYGZus{}pct DOUBLE PRECISION,}
+\PYG{l+s+s2}{                reaction\PYGZus{}time\PYGZus{}ms INTEGER,}
+\PYG{l+s+s2}{                focus\PYGZus{}rating DOUBLE PRECISION,}
+\PYG{l+s+s2}{                error\PYGZus{}rate DOUBLE PRECISION,}
+\PYG{l+s+s2}{                heart\PYGZus{}rate\PYGZus{}bpm INTEGER,}
+\PYG{l+s+s2}{                cognitive\PYGZus{}impairment DOUBLE PRECISION,}
+\PYG{l+s+s2}{                air\PYGZus{}quality INTEGER,}
+\PYG{l+s+s2}{                performance\PYGZus{}index INTEGER}
+\PYG{l+s+s2}{            )}
+\PYG{l+s+s2}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+
+
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{get\PYGZus{}record}\PYG{p}{(}\PYG{n}{record}\PYG{p}{:} \PYG{n}{RecordSchema}\PYG{p}{):}
+    \PYG{k}{with} \PYG{p}{(}
+        \PYG{n}{psycopg}\PYG{o}{.}\PYG{n}{connect}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}host=db dbname=postgres user=postgres password=1337\PYGZdq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{conn}\PYG{p}{,}
+        \PYG{n}{conn}\PYG{o}{.}\PYG{n}{cursor}\PYG{p}{()} \PYG{k}{as} \PYG{n}{cur}
+    \PYG{p}{):}
+        \PYG{n}{cur}\PYG{o}{.}\PYG{n}{execute}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+s2}{            SELECT performance\PYGZus{}index}
+\PYG{l+s+s2}{              FROM predictions}
+\PYG{l+s+s2}{             WHERE period = }\PYG{l+s+si}{\PYGZpc{}s}
+\PYG{l+s+s2}{               AND subject = }\PYG{l+s+si}{\PYGZpc{}s}
+\PYG{l+s+s2}{               AND co2\PYGZus{}ppm = }\PYG{l+s+si}{\PYGZpc{}s}
+\PYG{l+s+s2}{               AND pm25\PYGZus{}ugm3 = }\PYG{l+s+si}{\PYGZpc{}s}
+\PYG{l+s+s2}{               AND temperature\PYGZus{}c = }\PYG{l+s+si}{\PYGZpc{}s}
+\PYG{l+s+s2}{               AND humidity\PYGZus{}pct = }\PYG{l+s+si}{\PYGZpc{}s}
+\PYG{l+s+s2}{               AND reaction\PYGZus{}time\PYGZus{}ms = }\PYG{l+s+si}{\PYGZpc{}s}
+\PYG{l+s+s2}{               AND focus\PYGZus{}rating = }\PYG{l+s+si}{\PYGZpc{}s}
+\PYG{l+s+s2}{               AND error\PYGZus{}rate = }\PYG{l+s+si}{\PYGZpc{}s}
+\PYG{l+s+s2}{               AND heart\PYGZus{}rate\PYGZus{}bpm = }\PYG{l+s+si}{\PYGZpc{}s}
+\PYG{l+s+s2}{               AND cognitive\PYGZus{}impairment = }\PYG{l+s+si}{\PYGZpc{}s}
+\PYG{l+s+s2}{               AND air\PYGZus{}quality = }\PYG{l+s+si}{\PYGZpc{}s}
+\PYG{l+s+s2}{        \PYGZdq{}\PYGZdq{}\PYGZdq{}}\PYG{p}{,} \PYG{n+nb}{tuple}\PYG{p}{(}\PYG{n}{record}\PYG{o}{.}\PYG{n}{model\PYGZus{}dump}\PYG{p}{()}\PYG{o}{.}\PYG{n}{values}\PYG{p}{()))}
+        \PYG{n}{result}\PYG{p}{:} \PYG{n+nb}{tuple}\PYG{p}{[}\PYG{n+nb}{int}\PYG{p}{]} \PYG{o}{|} \PYG{k+kc}{None} \PYG{o}{=} \PYG{n}{cur}\PYG{o}{.}\PYG{n}{fetchone}\PYG{p}{()}
+        \PYG{k}{if} \PYG{n}{result} \PYG{o+ow}{is} \PYG{k+kc}{None}\PYG{p}{:}
+            \PYG{k}{return} \PYG{k+kc}{None}
+        \PYG{k}{return} \PYG{n}{result}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+
+
+\PYG{k}{def}\PYG{+w}{ }\PYG{n+nf}{add\PYGZus{}record}\PYG{p}{(}\PYG{n}{record}\PYG{p}{:} \PYG{n}{RecordSchema}\PYG{p}{,} \PYG{n}{performance\PYGZus{}index}\PYG{p}{:} \PYG{n+nb}{int}\PYG{p}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{k+kc}{None}\PYG{p}{:}
+    \PYG{k}{with} \PYG{p}{(}
+        \PYG{n}{psycopg}\PYG{o}{.}\PYG{n}{connect}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}host=db dbname=postgres user=postgres password=1337\PYGZdq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{conn}\PYG{p}{,}
+        \PYG{n}{conn}\PYG{o}{.}\PYG{n}{cursor}\PYG{p}{()} \PYG{k}{as} \PYG{n}{cur}
+    \PYG{p}{):}
+        \PYG{n}{cur}\PYG{o}{.}\PYG{n}{execute}\PYG{p}{(}
+\PYG{+w}{            }\PYG{l+s+sd}{\PYGZdq{}\PYGZdq{}\PYGZdq{}}
+\PYG{l+s+sd}{            INSERT INTO predictions}
+\PYG{l+s+sd}{            VALUES (DEFAULT, \PYGZpc{}s, \PYGZpc{}s, \PYGZpc{}s, \PYGZpc{}s, \PYGZpc{}s, \PYGZpc{}s, \PYGZpc{}s, \PYGZpc{}s, \PYGZpc{}s, \PYGZpc{}s, \PYGZpc{}s, \PYGZpc{}s, \PYGZpc{}s)}
+\PYG{l+s+sd}{            \PYGZdq{}\PYGZdq{}\PYGZdq{}}\PYG{p}{,}
+            \PYG{n+nb}{tuple}\PYG{p}{(}\PYG{n}{record}\PYG{o}{.}\PYG{n}{model\PYGZus{}dump}\PYG{p}{()}\PYG{o}{.}\PYG{n}{values}\PYG{p}{())} \PYG{o}{+} \PYG{p}{(}\PYG{n}{performance\PYGZus{}index}\PYG{p}{,)}
+        \PYG{p}{)}
+        \PYG{n}{conn}\PYG{o}{.}\PYG{n}{commit}\PYG{p}{()}
+\end{MintedVerbatim}
